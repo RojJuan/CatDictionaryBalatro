@@ -10,7 +10,7 @@ SMODS.Joker {
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult } }
     end,
-    rarity = 4,
+    rarity = "cd_freaky",
     atlas = 'CatDictionary',
     pos = { x = 0, y = 0 },
     cost = 999,

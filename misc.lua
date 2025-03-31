@@ -1,9 +1,31 @@
 SMODS.Atlas {
-    key = "CatDictionary",
-    path = "CatDictionary.png",
+    key = "Metro",
+    path = "metro.png",
     px = 71,
     py = 95
 }
+
+SMODS.Atlas {
+  key = "Lucas",
+  path = "lucas.png",
+  px = 71,
+  py = 95
+}
+
+SMODS.Atlas {
+  key = "Reyblob",
+  path = "reyblob.png",
+  px = 71,
+  py = 95
+}
+
+SMODS.Atlas {
+  key = "Decent",
+  path = "decent.png",
+  px = 71,
+  py = 95
+}
+
 
 SMODS.Rarity {
   key = "freaky",
@@ -15,34 +37,34 @@ SMODS.Rarity {
 
 SMODS.Consumable {
   key = "testcard",
-  set = 'Spectral',
+  set = 'Tarot',
   loc_txt = {
     name = "Testing thing",
     text = { "idk put smth here" }
   },
   cost = 999,
-  atlas = 'CatDictionary',
+  atlas = 'Metro',
   pos = { x = 0, y = 0},
   can_use = function(self, card)
     return true
   end,
   use = function(self, card, area)
     G.E_MANAGER:add_event(Event({
-      SMODS.add_card{set = 'Joker', rarity = 'cd_freaky'}
-    }))
+      SMODS.add_card{set = 'Joker', key="j_cd_lucas"}
+    })) 
   end
 }
 
 SMODS.Back{
-    name = "Freaky Deck",
+    name = "Cat Deck",
     key = "freck",
-    atlas = 'CatDictionary',
+    atlas = 'Metro',
     pos = {x = 0, y = 0},
-    config = {consumables = {'c_cd_testcard'}},
+    config = {jokers = {'j_cd_decent', 'j_cd_reyblob', 'j_cd_metro', 'j_cd_lucas'}},
     loc_txt = {
-        name = "Freaky Deck",
+        name = "Cat Deck",
         text = {
-            "Start with a {C:mult}TESTING{} card"
+            "Start with a {C:mult}CAT{}, and a {C:mult}LUCAS{} card."
         },
     },
 }

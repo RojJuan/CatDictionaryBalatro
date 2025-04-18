@@ -4,7 +4,7 @@ SMODS.Joker { --Metro
         name = 'Metro',
         text = {
             "No effect unless {C:attention}Mustard{}", 
-            "is also in a joker slot."
+            "is also owned"
         }
     },
     config = { extra = { mult = 4 } },
@@ -133,4 +133,71 @@ SMODS.Joker { --Decent
             end
         end
     end
+}
+
+SMODS.Joker {
+  key = 'lunchbox',
+  loc_txt = {
+    name = 'Mr. Beast Lunchbox',
+    text = {
+      "{C:green}#1# in #2#{} chance to {C:dark_edition}realise...{}"
+    }
+  },
+  config = { extra =  {odds = 100} },
+  atlas = 'test',
+  pos = { x = 0, y = 0},
+  rarity = 1,
+  cost = 5,
+  loc_vars = function (self, info_queue, card)
+    return {vars = { (G.GAME.probabilities.normal or 1), card.ability.extra.odds } }
+  end,
+  calculate = function (self, card, context)
+    if context.joker_main and not context.blueprint then
+      if pseudorandom('lunchbox') < G.GAME.probabilities.normal / card.ability.extra.odds then
+        SMODS.add_card{key = 'j_cd_real_lunch'}
+        G.E_MANAGER:add_event(Event({
+          trigger = 'after',
+          delay = 0.3,
+          blockable = false,
+          func = function()
+            G.jokers:remove_card(card)
+            card:remove()
+            card = nil
+            return true;
+            end
+        }))
+      end
+    end
+  end
+}
+
+SMODS.Joker {
+    key = 'real_lunch',
+    loc_txt = {
+        name = 'Realised Mr. Beast Lunchbox',
+        text = {
+            "{X:dark_edition,C:white}^1{} Mult for each dollar",
+            "gives {X:money,C:white}X10{} of current {C:money}money{}"
+        }
+    },
+    config = { extra = {} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {}}
+    end,
+    rarity = 'cd_realised',
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 2,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            return {
+                Emult_mod = G.GAME.dollars,
+                message = "I REALISE!!!!!!!!!!!!!"
+            }
+        end
+    end,
+  calc_dollar_bonus = function (self, card)
+    local bonus = 10 * G.GAME.dollars
+    return bonus
+  end
 }

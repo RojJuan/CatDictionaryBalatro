@@ -26,6 +26,12 @@ SMODS.Atlas {
   py = 95
 }
 
+SMODS.Atlas {
+  key = 'test',
+  path = 'CatDictionary.png',
+  px = 71,
+  py = 95
+}
 
 SMODS.Rarity {
   key = "freaky",
@@ -50,7 +56,7 @@ SMODS.Consumable {
   end,
   use = function(self, card, area)
     G.E_MANAGER:add_event(Event({
-      SMODS.add_card{set = 'Joker', key="j_cd_lucas"}
+      SMODS.add_card{set = 'Joker', key="j_cd_lunchbox"}
     })) 
   end
 }
@@ -60,7 +66,7 @@ SMODS.Back{
     key = "freck",
     atlas = 'Metro',
     pos = {x = 0, y = 0},
-    config = {jokers = {'j_cd_decent', 'j_cd_reyblob', 'j_cd_metro', 'j_cd_lucas'}},
+    config = {jokers = {'j_cd_decent', 'j_cd_reyblob', 'j_cd_metro', 'j_cd_lucas'}, consumables = {'c_cd_testcard'}},
     loc_txt = {
         name = "Cat Deck",
         text = {
@@ -68,3 +74,12 @@ SMODS.Back{
         },
     },
 }
+
+SMODS.Rarity {
+  key = "realised",
+  loc_txt = {
+    name = "realised"
+  },
+  badge_colour = HEX("ff4287")
+}
+

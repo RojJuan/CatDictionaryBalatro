@@ -143,7 +143,7 @@ SMODS.Joker {
       "{C:green}#1# in #2#{} chance to {C:dark_edition}realise...{}"
     }
   },
-  config = { extra =  {odds = 100} },
+  config = { extra =  {odds = 1} },
   atlas = 'test',
   pos = { x = 0, y = 0},
   rarity = 1,
@@ -201,3 +201,102 @@ SMODS.Joker {
     return bonus
   end
 }
+
+SMODS.Joker {
+    key = 'pizza',
+    loc_txt = {
+        name = 'pizza',
+        text = {
+            "You {C:mult} die{}"
+        }
+    },
+    config = { extra = {} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {}}
+    end,
+    rarity = 1,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 1,
+    calculate = function(self, card, context)
+      if context.buying_card then
+        SMODS.add_card{key = "CRASHH!!"}
+      end
+    end
+}
+
+SMODS.Joker {
+    key = 'carti',
+    loc_txt = {
+        name = 'Playboi Carti',
+        text = {
+            "Gains {X:mult,C:white}X#2#{} Mult",
+            "after playing {C:attention}50 hands{}",
+            "{C:inactive}(Currently {}{X:mult,C:white}X#1#{} {C:inactive}Mult){}",
+            "{C:inactive}(Currently {}{C:attention}#3# hands{} {C:inactive}left){}"
+        }
+    },
+    config = { extra = {Xmult = 1, Xmult_gain = 8, HandsRem = 50} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.Xmult, card.ability.extra.Xmult_gain, card.ability.extra.HandsRem}}
+    end,
+    rarity = 2,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 6,
+    calculate = function(self, card, context)
+      if context.before and not context.blueprint then
+        if card.ability.extra.HandsRem > 1 then
+          card.ability.extra.HandsRem = card.ability.extra.HandsRem - 1
+        else
+          card.ability.extra.HandsRem = 50
+          card.ability.extra.Xmult = card.ability.extra.Xmult + card.ability.extra.Xmult_gain
+          return {
+            message = "HE DROPPED!",
+            colour = G.C.MULT
+          }
+        end
+      end
+      if context.joker_main and card.ability.extra.Xmult > 1 then
+        return {
+          Xmult_mod = card.ability.extra.Xmult,
+          message = localize {type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } }
+        }
+      end 
+    end
+}
+
+SMODS.Joker {
+    key = 'nvim',
+    loc_txt = {
+        name = 'Neovim',
+        text = {
+            "If {C:attention}blind{} is defeated in {C:attention}1 hand{}",
+            "create a random {C:spectral}Spectral{} card",
+            "{C:inactive}this joker was coded in Neovim (BTW){}"
+        }
+    },
+    config = { extra = {hands = 0} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.hands} }
+    end,
+    rarity = 3,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 8,
+    calculate = function(self, card, context)
+      if context.setting_blind and not context.blueprint then
+        card.ability.extra.hands = 0
+      end
+      if context.before and not context.blueprint then
+        card.ability.extra.hands = card.ability.extra.hands + 1
+      end
+      if context.end_of_round and context.cardarea == G.jokers and card.ability.extra.hands == 1 then
+        SMODS.add_card{set = 'Spectral'}
+        return {
+          message = "Blazingly fast!"
+        }
+      end
+    end
+}
+

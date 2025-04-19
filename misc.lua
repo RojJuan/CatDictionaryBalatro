@@ -56,7 +56,8 @@ SMODS.Consumable {
   end,
   use = function(self, card, area)
     G.E_MANAGER:add_event(Event({
-      SMODS.add_card{set = 'Joker', key="j_cd_nvim"}
+      SMODS.add_card{set = 'Joker', key="j_cd_horse"},
+      SMODS.add_card{key = "j_pareidolia"}
     })) 
   end
 }
@@ -83,3 +84,7 @@ SMODS.Rarity {
   badge_colour = HEX("ff4287")
 }
 
+SMODS.Sound {
+  key = 'what_help_me',
+  path = 'what_help_me.wav'
+}

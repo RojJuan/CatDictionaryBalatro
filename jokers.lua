@@ -207,7 +207,7 @@ SMODS.Joker {
     loc_txt = {
         name = 'pizza',
         text = {
-            "You {C:mult} die{}"
+            "You {C:mult}die{}"
         }
     },
     config = { extra = {} },
@@ -221,6 +221,9 @@ SMODS.Joker {
     calculate = function(self, card, context)
       if context.buying_card then
         SMODS.add_card{key = "CRASHH!!"}
+      end
+      if context.ending_shop then
+        SMODS.add_card{key = "FALLBACK CRASH BECAUSE OF BOOSTER PACKS!!!"}
       end
     end
 }
@@ -357,7 +360,6 @@ SMODS.Joker {
       for _, _card in pairs(context.scoring_hand) do
         if _card:is_face() then
           count = count + 1
-          print(count)
         end
       end
       card.ability.extra.mult = card.ability.extra.mult - (card.ability.extra.mult_loss * count)
@@ -427,7 +429,6 @@ SMODS.Joker {
       for _, _card in pairs(context.scoring_hand) do
         if _card:is_face() then
           count = count + 1
-          print(count)
         end
       end
       card.ability.extra.chips = card.ability.extra.chips - (card.ability.extra.chips_loss * count)
@@ -439,3 +440,140 @@ SMODS.Joker {
     end
   end
 }
+
+SMODS.Joker {
+  key = 'velk',
+  loc_txt = {
+    name = 'Velk',
+    text = {
+      "First scoring {C:attention}King{} or {C:attention}Queen{}",
+      "turns into a {C:mult}Mult{} card"
+    }
+  },
+  config = { extra = {} },
+  loc_vars = function(self, info_queue, card)
+    return { vars = {} }
+  end,
+  atlas = 'test',
+  pos = { x = 0, y = 0},
+  rarity = 2,
+  cost = 6,
+  calculate = function(self, card, context)
+    if context.before and not context.blueprint then
+      local count = 0
+      for _, _card in pairs(context.scoring_hand) do
+        if _card:get_id() == 13 or _card:get_id() == 12 then
+          if count < 1 then
+            _card:set_ability(G.P_CENTERS.m_mult, nil, true)
+            count = count + 1
+          end
+        end
+      end
+      if count > 0 then
+        return {
+          message = 'Bisexual',
+         colour = G.C.MULT
+        }
+      end
+    end
+  end
+}
+
+SMODS.Joker {
+    key = 'csmajor',
+    loc_txt = {
+        name = 'CS Major',
+        text = {
+            "All {C:attention}Queens{} are {C:mult}debuffed{}",
+            "{C:green}#1# in #2#{} chance to",
+            "earn {C:money}#4#${} and",
+            "gain {X:mult,C:white}X#3#{} Mult"
+        }
+    },
+    config = { extra = {odds = 42, Xmult = 10, money = 50} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {(G.GAME.probabilities.normal or 1), card.ability.extra.odds, card.ability.extra.Xmult, card.ability.extra.money }}
+    end,
+    rarity = 2,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 5,
+    update = function(self, card, dt)
+      if G.deck and card.added_to_deck then
+        for i, _card in pairs(G.deck.cards) do
+          if _card:get_id() == 12 then
+            _card:set_debuff(true)
+          end
+        end
+      end
+      if G.deck and card.added_to_deck then
+        for i, _card in pairs(G.hand.cards) do
+          if _card:get_id() == 12 then
+            _card:set_debuff(true)
+          end
+        end
+      end
+    end,
+    calculate = function (self, card, context)
+      if context.joker_main then
+        if pseudorandom('csmajor') <  G.GAME.probabilities.normal / card.ability.extra.odds then
+          return {
+            p_dollars = card.ability.extra.money,
+            Xmult_mod = card.ability.extra.Xmult,
+            message = localize {type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } }
+          }
+        end
+      end
+    end
+}
+
+SMODS.Joker {
+    key = 'fieldsob',
+    loc_txt = {
+        name = 'Field Sobreity',
+        text = {
+            "Gains {X:mult,C:white}X#2#{} Mult when {C:attention}scoring{}",
+            "{C:attention}hand{} contains either {C:attention}only{}",
+            "{C:spades}Spades{} and {C:clubs}Clubs{} or",
+            "{C:hearts}Hearts{} and {C:diamonds}Diamonds{}",
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}"
+        }
+    },
+    config = { extra = {Xmult = 1, Xmult_gain= 0.08} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.Xmult, card.ability.extra.Xmult_gain}}
+    end,
+    rarity = 2,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 6,
+    calculate = function(self, card, context)
+      if context.before and not context.blueprint then
+        local black = false 
+        local red = false
+        for _, _card in pairs(context.scoring_hand) do
+          if _card:is_suit("Spades") or _card:is_suit("Clubs") then
+            black = true
+          end
+          if _card:is_suit("Hearts") or _card:is_suit("Diamonds") then
+            red = true
+          end
+        end
+        if (black == true and red == false) or (black == false and red == true) then
+          card.ability.extra.Xmult = card.ability.extra.Xmult_gain + card.ability.extra.Xmult
+          return {
+            message = "Sober!"
+          }
+        end
+      end
+      if context.joker_main then
+        if card.ability.extra.Xmult > 1 then
+          return {
+            Xmult_mod = card.ability.extra.Xmult,
+            message = localize {type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } } 
+          }
+        end
+      end
+    end
+}
+

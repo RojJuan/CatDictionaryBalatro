@@ -56,8 +56,10 @@ SMODS.Consumable {
   end,
   use = function(self, card, area)
     G.E_MANAGER:add_event(Event({
-      SMODS.add_card{set = 'Joker', key="j_cd_horse"},
-      SMODS.add_card{key = "j_pareidolia"}
+      SMODS.add_card{set = 'Joker', key="j_cd_csmajor"},
+      SMODS.add_card{key = "j_cd_velk"},
+      SMODS.add_card{key = "c_death"},
+      SMODS.add_card{key = "c_death"}
     })) 
   end
 }

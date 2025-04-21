@@ -57,7 +57,7 @@ SMODS.Consumable {
   use = function(self, card, area)
     G.E_MANAGER:add_event(Event({
       SMODS.add_card{set = 'Joker', key="j_cd_csmajor"},
-      SMODS.add_card{key = "j_cd_velk"},
+      SMODS.add_card{key = "j_cd_lunchbox"},
       SMODS.add_card{key = "c_death"},
       SMODS.add_card{key = "c_death"}
     })) 
@@ -89,4 +89,9 @@ SMODS.Rarity {
 SMODS.Sound {
   key = 'what_help_me',
   path = 'what_help_me.wav'
+}
+
+SMODS.Sound {
+  key = 'get_out',
+  path = 'get_out.wav'
 }

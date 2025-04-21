@@ -577,3 +577,165 @@ SMODS.Joker {
     end
 }
 
+SMODS.Joker {
+    key = 'get_out',
+    loc_txt = {
+        name = 'GO! GET OUT!',
+        text = {
+            "When last {C:attention}hand{} of round is played",
+            "{C:attention}destroys{} all cards held in hand and",
+            "all scored cards get {C:mult}+#1#{} Bonus Mult"
+        }
+    },
+    config = { extra = {bonus_mult = 8} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.bonus_mult}}
+    end,
+    rarity = 1,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 1,
+    calculate = function(self, card, context)
+      if context.before and not context.blueprint then
+        if G.GAME.current_round.hands_left == 0 then
+          for _, _card in pairs(G.hand.cards) do
+            _card:start_dissolve(nil, _first_dissolve)
+            _first_dissolve = true
+          end
+          play_sound('cd_get_out')
+          return {
+            message = 'GET OUT!',
+            colour = G.C.MULT
+          }
+        end
+      end
+      if context.individual and context.cardarea == G.play then
+        if G.GAME.current_round.hands_left == 0 then
+          context.other_card.ability.perma_mult = context.other_card.ability.perma_mult + card.ability.extra.bonus_mult
+          return {
+            extra = { message = localize('k_upgrade_ex'), colour = G.C.MULT },
+            card = card
+          }
+        end
+      end
+    end
+}
+
+SMODS.Joker {
+    key = 'matt',
+    loc_txt = {
+        name = 'Mattitap',
+        text = {
+            "When {C:attention}blind{} is selected,",
+            "destroy a random {C:attention}number{} card",
+            "this joker gains {C:mult}+#2#{} Mult",
+            "{C:inactive}(currently {}{C:mult}+#1#{} {C:inactive}Mult){}"
+        }
+    },
+    config = { extra = {mult = 0, mult_gain = 4} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.mult, card.ability.extra.mult_gain}}
+    end,
+    rarity = 2,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 4,
+    calculate = function(self, card, context)
+      if context.setting_blind and not context.blueprint then
+        local face = false
+        local killed = false
+        for _, _card in pairs(G.deck.cards) do
+          face = false
+          if _card:get_id() == 11 or _card:get_id() == 12 or _card:get_id() == 13 then
+            face = true
+          end
+          if face == false and killed == false then
+            killed = true
+            _card:start_dissolve(nil, _first_dissolve)
+            _first_dissolve = true
+            card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
+          end
+        end
+        return {
+          message = '+4 Mult',
+          colour = G.C.MULT
+        }
+      end
+      if context.joker_main then
+        return {
+          mult_mod = card.ability.extra.mult,
+          message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } }
+        }
+      end
+    end
+}
+
+SMODS.Joker {
+    key = 'sabrina',
+    loc_txt = {
+        name = 'Sabrina Carpenter',
+        text = {
+            "{C:green}#3# in #2#{} chance to give",
+            "{C:money}#1#${} per card scored"
+        }
+    },
+    config = { extra = {money = 8, odds = 2} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.money, card.ability.extra.odds, (G.GAME.probabilities.normal or 1)}}
+    end,
+    rarity = 1,
+    atlas = 'test',
+    pos = { x = 0, y = 0 },
+    cost = 1,
+    calculate = function(self, card, context)
+      if context.individual and context.cardarea == G.play then
+        if pseudorandom('sabrina') < G.GAME.probabilities.normal / card.ability.extra.odds then
+        	G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + card.ability.extra.money
+			    G.E_MANAGER:add_event(Event({
+				    func = function()
+					    G.GAME.dollar_buffer = 0
+					    return true
+				    end,
+			    }))
+          return {
+            dollars = card.ability.extra.money,
+            card = card
+          }
+        end
+      end
+    end
+}
+
+SMODS.Joker { 
+    key = 'mustard',
+    loc_txt = {
+        name = 'Mustard',
+        text = {
+            "No effect unless {C:attention}Metro{}", 
+            "is also owned"
+        }
+    },
+    config = { extra = { chips = 30, Xchips = 30 } },
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips, card.ability.extra.Xchips } }
+    end,
+    rarity = 3,
+    atlas = 'Metro',
+    pos = { x = 0, y = 0 },
+    cost = 7,
+    calculate = function(self, card, context)
+        if context.joker_main then
+          if next(SMODS.find_card('j_cd_metro')) then
+            return {
+              message = localize { type = 'variable', key = 'a_xchips', vars = {card.ability.extra.Xchips}},
+              Xchip_mod = card.ability.extra.Xchips
+            }
+          else
+            return {
+                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } },
+                chip_mod = card.ability.extra.chips
+            }
+          end
+        end
+    end
+}

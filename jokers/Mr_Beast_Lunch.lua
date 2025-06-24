@@ -21,10 +21,11 @@ SMODS.Joker {
       "{C:green}#1# in #2#{} chance to {C:dark_edition}realise...{}"
     }
   },
-  config = { extra =  {odds = 1} },
+  config = { extra =  {odds = 100} },
   atlas = 'lunch',
   pos = { x = 0, y = 0},
   rarity = 1,
+  eternal_compat = false,
   cost = 5,
   loc_vars = function (self, info_queue, card)
     return {vars = { (G.GAME.probabilities.normal or 1), card.ability.extra.odds } }
@@ -73,6 +74,7 @@ SMODS.Joker {
     rarity = 'cd_realised',
     atlas = 'lunch',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 2,
     calculate = function(self, card, context)
         if context.individual and context.other_card.lucky_trigger then

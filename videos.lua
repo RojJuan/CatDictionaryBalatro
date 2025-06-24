@@ -10,11 +10,8 @@ function create_UIBox_custom_video1(name, buttonname)
   vid_sprite.video = video_file
   video_file:play()
 
-  local t = create_UIBox_generic_options({ back_delay = 2 , back_label = buttonname, colour = G.C.BLACK, padding = 0, contents = {
+  local t = create_UIBox_generic_options({ back_delay = 7 , back_label = buttonname, colour = G.C.BLACK, padding = 0, contents = {
     {n=G.UIT.O, config={object = vid_sprite}} }})
   return t
 end 
 
-function vidtest()
-  G.FUNCS.overlay_menu{definition = create_UIBox_custom_video1("1","Keep scrolling.")}
-end

@@ -21,6 +21,8 @@ SMODS.Joker {
   end,
   atlas = 'horse',
   pos = { x = 0, y = 0},
+  eternal_compat = false,
+  blueprint_compat = true,
   rarity = 2,
   cost = 6,
   calculate = function(self, card, context)

@@ -23,6 +23,7 @@ SMODS.Joker {
     rarity = 2,
     atlas = 'carti',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 6,
     calculate = function(self, card, context)
       if context.before and not context.blueprint then

@@ -19,8 +19,9 @@ SMODS.Joker {
         return { vars = {card.ability.extra.money, card.ability.extra.odds, (G.GAME.probabilities.normal or 1)}}
     end,
     rarity = 1,
-    atlas = 'test',
+    atlas = 'sabrina',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 1,
     calculate = function(self, card, context)
       if context.individual and context.cardarea == G.play then

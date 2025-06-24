@@ -10,21 +10,22 @@ SMODS.Joker { --Lucas
     loc_txt = {
         name = "Lucas",
         text = {
-            "{C:green}1 in 10{} chance to give", 
-            "{C:chips}+200 Chips{}"
+            "{C:green}#2# in #3#{} chance to give", 
+            "{C:chips}+#1# Chips{}"
         }
     },
-    config = { extra = { chips = 200}},
+    config = { extra = { chips = 200, odds = 10}},
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.chips} }
+        return { vars = { card.ability.extra.chips, (G.GAME.probabilities.normal or 1), card.ability.extra.odds} }
     end,
     rarity = 2,
     atlas = 'Lucas',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 4,
     calculate = function(self, card, context)
         if context.joker_main then
-            if math.random(1, 10) == 1 then
+            if pseudorandom('decent') < G.GAME.probabilities.normal / card.ability.extra.odds then
                 return {
                     chips = card.ability.extra.chips,
                 }

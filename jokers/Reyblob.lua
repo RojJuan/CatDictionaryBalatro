@@ -21,6 +21,8 @@ SMODS.Joker { -- Reyblob
     rarity = 2,
     atlas = 'Reyblob',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
+    eternal_compat = false,
     cost = 4,
     calculate = function(self, card, context)
         if context.joker_main then

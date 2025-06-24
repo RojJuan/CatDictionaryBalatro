@@ -16,6 +16,7 @@ SMODS.Joker {
     rarity = 2,
     atlas = 'test',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 4,
     calculate = function(self, card, context)
       if context.setting_blind and not context.blueprint then
@@ -23,7 +24,7 @@ SMODS.Joker {
         local killed = false
         for _, _card in pairs(G.deck.cards) do
           face = false
-          if _card:get_id() == 11 or _card:get_id() == 12 or _card:get_id() == 13 then
+          if _card:get_id() == 11 or _card:get_id() == 12 or _card:get_id() == 13 or _card:get_id() == 14 then
             face = true
           end
           if face == false and killed == false then

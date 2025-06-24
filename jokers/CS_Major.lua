@@ -16,6 +16,7 @@ SMODS.Joker {
     rarity = 2,
     atlas = 'test',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 5,
     update = function(self, card, dt)
       if G.deck and card.added_to_deck then

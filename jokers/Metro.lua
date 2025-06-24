@@ -21,6 +21,7 @@ SMODS.Joker { --Metro
     rarity = 3,
     atlas = 'Metro',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 7,
     calculate = function(self, card, context)
         if context.joker_main then

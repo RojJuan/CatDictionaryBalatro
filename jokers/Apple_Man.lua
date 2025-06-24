@@ -21,7 +21,9 @@ SMODS.Joker {
   end,
   atlas = 'apple_man',
   pos = { x = 0, y = 0},
-  rarity = 3,
+  rarity = 2,
+  eternal_compat = false, 
+  blueprint_compat = true,
   cost = 8,
   calculate = function(self, card, context)
     if context.joker_main then

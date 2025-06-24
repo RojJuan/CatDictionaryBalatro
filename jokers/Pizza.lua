@@ -20,13 +20,9 @@ SMODS.Joker {
     rarity = 1,
     atlas = 'pizza',
     pos = { x = 0, y = 0 },
+    eternal_compat = false,
     cost = 1,
-    calculate = function(self, card, context)
-      if context.buying_card then
-        SMODS.add_card{key = "CRASHH!!"}
-      end
-      if context.ending_shop then
-        SMODS.add_card{key = "FALLBACK CRASH BECAUSE OF BOOSTER PACKS!!!"}
-      end
+    add_to_deck = function(self, card, from_debuff)
+        SMODS.restart_game()
     end
 }

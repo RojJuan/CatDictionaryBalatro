@@ -22,6 +22,7 @@ SMODS.Joker {
     rarity = 3,
     atlas = 'nvim',
     pos = { x = 0, y = 0 },
+    blueprint_compat = true,
     cost = 8,
     calculate = function(self, card, context)
       if context.setting_blind and not context.blueprint then
